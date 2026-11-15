@@ -2,845 +2,719 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#041c25">
-<title>7377斗罗大陆 · 魂师集结</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#061b26">
+<title>7377斗罗大陆 · 新手指南</title>
 <style>
-:root{
-  --bg:#03151e;
-  --panel:#082733;
-  --cyan:#6deaff;
-  --green:#70ffc4;
-  --gold:#ffdf99;
-  --text:#ecfbff;
-  --muted:#acccd6;
-  --line:#69ebda40;
+:root {
+  color-scheme: dark;
+  --bg: #06141f;
+  --panel: rgba(9, 32, 45, .93);
+  --line: rgba(111, 240, 225, .22);
+  --text: #e9f7fc;
+  --muted: #aac7d4;
+  --cyan: #70eaff;
+  --green: #78ffd0;
+  --gold: #ffdc96;
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:85px}
-body{
-  margin:0;background:var(--bg);color:var(--text);
-  font:16px/1.85 "Microsoft YaHei","PingFang SC",sans-serif;
-  overflow-wrap:anywhere;
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.85 "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+  overflow-x: hidden;
 }
-a{color:inherit}
-button{font:inherit;cursor:pointer}
-a:focus-visible,button:focus-visible{
-  outline:3px solid var(--gold);outline-offset:4px;
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+a:focus-visible, button:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 5px;
 }
-.wrap{width:min(1120px,calc(100% - 28px));margin:auto}
-.background{
-  position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
+::selection { background: #226b76; color: white; }
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
   background:
-    radial-gradient(ellipse at 10% 10%,#008ce43b,transparent 55%),
-    radial-gradient(ellipse at 95% 50%,#00d79a29,transparent 55%),
-    radial-gradient(ellipse at 30% 95%,#704bd51c,transparent 50%),#03151e;
+    radial-gradient(ellipse at 10% 15%, #12617c70, transparent 50%),
+    radial-gradient(ellipse at 90% 60%, #097e6755, transparent 50%),
+    linear-gradient(145deg, #04101e, #092530 60%, #041821);
 }
-.background::before{
-  content:"";position:absolute;inset:-100%;
-  background:repeating-linear-gradient(
-    120deg,transparent 0 320px,#78f9e409 321px,
-    #75ffe85c 323px,transparent 326px 620px);
-  animation:stream 15s linear infinite;
+.background::before, .background::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 65%;
+  filter: blur(65px);
+  background: linear-gradient(120deg, transparent 20%, #26dcff35, #59ffc92e, transparent 80%);
+  animation: aurora 15s ease-in-out infinite alternate;
 }
-.background::after{
-  content:"";position:absolute;inset:0;
+.background::before { top: -20%; left: -25%; }
+.background::after { bottom: -20%; right: -25%; animation-delay: -7s; }
+.stars {
+  position: absolute;
+  inset: -100px;
   background-image:
-    radial-gradient(circle,#b2ffe9aa 1px,transparent 2px),
-    radial-gradient(circle,#8edaff77 1px,transparent 2px);
-  background-size:143px 167px,211px 239px;
-  animation:particles 20s linear infinite;
+    radial-gradient(1px 1px at 20% 30%, #dbffff 99%, transparent),
+    radial-gradient(2px 2px at 70% 15%, #74ffd4 99%, transparent),
+    radial-gradient(1px 1px at 80% 80%, #8fdcff 99%, transparent),
+    radial-gradient(1px 1px at 40% 60%, #fff 99%, transparent);
+  background-size: 280px 320px;
+  opacity: .5;
+  animation: drift 20s linear infinite alternate;
 }
-@keyframes stream{to{transform:translate(450px,260px)}}
-@keyframes particles{to{background-position:0 -334px,0 -478px}}
-header{
-  position:sticky;top:0;z-index:30;
-  background:#041c27ee;backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--line);
+@keyframes aurora {
+  to { transform: translate(20%, 20%) rotate(20deg); opacity: .45; }
 }
-.bar{
-  min-height:64px;display:flex;align-items:center;
-  justify-content:space-between;gap:14px;
+@keyframes drift { to { transform: translateY(-70px); } }
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid var(--line);
+  background: rgba(5, 21, 31, .94);
+  backdrop-filter: blur(18px);
 }
-.brand{
-  font-weight:900;letter-spacing:2px;text-decoration:none;color:var(--green);
+.top-inner {
+  max-width: 1180px;
+  margin: auto;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
 }
-.header-right{display:flex;align-items:center;gap:18px}
-.header-right a{text-decoration:none;font-size:14px}
-.motion{
-  border:1px solid var(--line);border-radius:6px;
-  background:#103c49;color:var(--text);padding:5px 11px;font-size:13px;
+.brand { font-weight: 900; letter-spacing: 2px; }
+.brand span { color: var(--green); }
+.top-links { display: flex; gap: 20px; color: var(--muted); font-size: 13px; }
+.top-links a:hover { color: var(--green); }
+.hero {
+  min-height: 560px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 100px 20px 85px;
+  text-align: center;
+  overflow: hidden;
 }
-.hero{
-  position:relative;isolation:isolate;overflow:hidden;
-  min-height:690px;display:grid;place-items:center;
-  text-align:center;padding:90px 15px 65px;
+.hero-content { position: relative; z-index: 2; }
+.eyebrow { color: var(--green); font-size: 12px; letter-spacing: 5px; }
+h1 {
+  margin: 18px 0 12px;
+  font-size: clamp(36px, 7vw, 78px);
+  line-height: 1.35;
+  letter-spacing: 3px;
+  color: var(--cyan);
+  background: linear-gradient(110deg, #fff, #79eaff, #7effce, #ffe3a0, #fff);
+  background-size: 250% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 20px #5ef5d64d);
+  animation: title-flow 7s linear infinite;
 }
-.hero::after{
-  content:"";position:absolute;inset:0;z-index:-1;
-  background:linear-gradient(transparent,#03151e25 45%,#03151e 100%);
+@keyframes title-flow { to { background-position: 250% center; } }
+.subtitle { font-size: clamp(15px, 2.3vw, 21px); letter-spacing: 2px; color: #daf1fa; }
+.tags, .hero-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
+.tags { margin-top: 24px; }
+.tag {
+  padding: 4px 13px;
+  background: #082b35cc;
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  color: #caeee9;
+  font-size: 12px;
 }
-.hero-content{width:100%;max-width:950px}
-.aura{
-  position:absolute;z-index:-3;left:50%;top:44%;
-  transform:translate(-50%,-50%);width:min(650px,105vw);
-  aspect-ratio:1;border-radius:50%;
-  background:radial-gradient(circle,#5df5b810,#26dfff16 42%,transparent 70%);
-  box-shadow:0 0 110px #26dfff14;
+.hero-actions { margin-top: 28px; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 18px;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #123742;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform .2s, background .2s, border-color .2s;
 }
-.ring{
-  position:absolute;left:50%;top:44%;z-index:-2;
-  width:var(--size);aspect-ratio:1;border:2px solid var(--color);
-  border-radius:50%;transform:translate(-50%,-50%);
-  box-shadow:0 0 18px var(--color),inset 0 0 18px var(--color);
-  opacity:.55;animation:spin var(--speed) linear infinite;
+.btn:hover { transform: translateY(-2px); border-color: var(--green); background: #19505a; }
+.btn.primary {
+  background: linear-gradient(110deg, #7deaff, #78ffcc);
+  color: #062c34;
+  border-color: transparent;
+  box-shadow: 0 5px 30px #58eec82a;
 }
-.ring::before{
-  content:"";position:absolute;inset:11px;border-radius:50%;
-  border:2px dashed var(--color);
+.rings {
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  opacity: .48;
+  pointer-events: none;
 }
-.ring::after{
-  content:"✦";position:absolute;left:48%;top:-20px;
-  font-size:28px;color:var(--color);text-shadow:0 0 15px currentColor;
+.ring {
+  position: absolute;
+  inset: 0;
+  color: #70eaff;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  box-shadow: 0 0 22px #70eaff30, inset 0 0 22px #70eaff30;
+  animation: rotate 45s linear infinite;
 }
-.r1{--size:min(620px,100vw);--color:#49dfff;--speed:55s}
-.r2{--size:min(510px,83vw);--color:#76ffbb;--speed:40s;animation-direction:reverse}
-.r3{--size:min(395px,65vw);--color:#c595ff;--speed:30s}
-.r4{--size:min(285px,47vw);--color:#ffdd85;--speed:23s;animation-direction:reverse}
-@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
-.grass{
-  position:absolute;bottom:20px;left:0;width:100%;height:420px;
-  z-index:-2;opacity:.55;filter:drop-shadow(0 0 9px #21d4bb);
+.ring::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border: 1px dashed currentColor;
+  border-radius: 50%;
 }
-.eyebrow{
-  display:inline-block;padding:6px 18px;
-  border:1px solid #75f5c877;border-radius:30px;
-  background:#062b36e8;color:#b3ffdc;font-size:12px;letter-spacing:4px;
+.ring::after {
+  content: "✦";
+  position: absolute;
+  top: -26px;
+  left: calc(50% - 15px);
+  font-size: 30px;
+  text-shadow: 0 0 15px currentColor;
 }
-.title{animation:float 5s ease-in-out infinite}
-@keyframes float{50%{transform:translateY(-9px)}}
-h1{
-  font-size:clamp(32px,7.5vw,80px);line-height:1.3;
-  margin:25px 0;font-weight:950;letter-spacing:3px;
-  color:#c4fff0;filter:drop-shadow(0 4px 2px #00151d);
+.ring:nth-child(2) { inset: 42px; color: #78ffd0; animation: rotate 32s linear infinite reverse; }
+.ring:nth-child(3) { inset: 84px; color: #c1a0ff; animation-duration: 23s; opacity: .6; }
+.ring:nth-child(4) { inset: -44px; color: #ffdc96; border-style: dashed; opacity: .45; animation-duration: 65s; }
+@keyframes rotate { to { transform: rotate(360deg); } }
+main { max-width: 1180px; margin: auto; padding: 0 24px 60px; }
+.nav-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 30px; }
+.nav-card {
+  padding: 18px 13px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+  transition: .2s;
 }
-@supports (background-clip:text) or (-webkit-background-clip:text){
-  h1{
-    background:linear-gradient(110deg,#65dfff,#b6ffcd 25%,
-      #fff 40%,#6deaff 55%,#e3d0ff 75%,#65dfff);
-    background-size:250% 100%;
-    background-clip:text;-webkit-background-clip:text;color:transparent;
-    animation:shine 6s linear infinite;
-  }
+.nav-card:hover { transform: translateY(-4px); background: #123d47; border-color: var(--green); }
+.nav-card span { display: block; font-size: 12px; color: var(--green); letter-spacing: 2px; margin-bottom: 7px; }
+.nav-card strong { font-size: 14px; }
+.nav-card small { display: block; color: var(--muted); font-size: 11px; margin-top: 4px; }
+.section {
+  margin: 22px 0;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--panel);
+  overflow: hidden;
+  box-shadow: 0 15px 45px #0002;
 }
-@keyframes shine{to{background-position:250% 0}}
-.slogan{
-  margin:0 auto;width:fit-content;padding:12px 22px;
-  background:linear-gradient(120deg,#10526be8,#125642df);
-  border:1px solid #a8ffda88;border-radius:9px;
-  color:#e1ffec;font-size:clamp(17px,2.6vw,27px);font-weight:900;
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 28px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(90deg, #1c80702a, transparent);
 }
-.slogan span{display:inline-block}
-.tags,.actions{display:flex;justify-content:center;flex-wrap:wrap;gap:12px}
-.tags{margin:25px 0}
-.tags span{
-  padding:4px 13px;background:#092d3be8;
-  border:1px solid var(--line);border-radius:5px;font-size:13px;
+.number {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  border: 1px solid #78ffd04d;
+  color: var(--green);
+  background: #19534a3b;
+  font-weight: 800;
 }
-.btn{
-  display:inline-flex;justify-content:center;align-items:center;
-  padding:10px 18px;text-decoration:none;font-weight:700;
-  border:1px solid #91ffe488;border-radius:7px;
-  background:linear-gradient(125deg,#087aa0,#118b68);color:white;
-  transition:transform .2s,filter .2s;
+h2 { margin: 0; font-size: 21px; line-height: 1.5; }
+.section-head p { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
+.content { padding: 26px 28px; }
+h3 { margin: 0 0 14px; color: #b6ffe9; font-size: 18px; }
+p { margin: 0 0 14px; }
+p:last-child { margin-bottom: 0; }
+strong { color: #e2fff4; }
+.server-grid, .map-grid, .command-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.server {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 24px;
+  background: linear-gradient(130deg, #175b6455, #0b2536);
 }
-.btn:hover{transform:translateY(-3px);filter:brightness(1.15)}
-.btn.secondary{background:#103847}
-.btn.gold{
-  background:linear-gradient(125deg,#fff1c2,#efc373);
-  border-color:#ffdfa4;color:#40351b;
+.server:nth-child(2) { background: linear-gradient(130deg, #36528255, #0c3435); }
+.server-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.server h3 { color: var(--text); margin: 0; font-size: 20px; }
+.map-label { padding: 2px 12px; border: 1px solid var(--line); border-radius: 20px; color: var(--green); font-size: 12px; }
+.ip { display: block; color: var(--cyan); font: 22px/1.8 Consolas, monospace; margin: 18px 0; overflow-wrap: anywhere; }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.note { padding: 14px 16px; margin-top: 18px; border: 1px solid #70eaff30; border-radius: 10px; background: #70eaff08; color: #c7e5ef; font-size: 14px; }
+.warning { padding: 12px 15px; margin-top: 12px; border-left: 3px solid var(--gold); background: #ffdc960c; color: #ffe0ac; border-radius: 0 8px 8px 0; font-size: 14px; }
+.key-list { display: grid; gap: 12px; }
+.key-row { display: grid; grid-template-columns: 78px 1fr; gap: 16px; padding: 18px; border: 1px solid #a6f7ff12; border-radius: 12px; background: #ffffff03; }
+kbd { display: inline-block; padding: 3px 10px; border: 1px solid #70eaff55; border-bottom-width: 3px; border-radius: 7px; background: linear-gradient(#1b4856, #0e2a37); color: var(--cyan); font: 600 13px/1.8 system-ui; white-space: nowrap; }
+.key-row p { color: #bfd6df; font-size: 14px; margin: 5px 0 0; }
+.divider { height: 1px; background: var(--line); margin: 26px 0; }
+.command { padding: 16px; background: #082631; border: 1px solid var(--line); border-radius: 10px; }
+.command code { color: var(--green); font: 600 15px/1.8 monospace; }
+.command p { color: var(--muted); font-size: 13px; margin-top: 5px; }
+.steps { padding: 0; margin: 0; list-style: none; counter-reset: step; display: grid; gap: 13px; }
+.steps li { counter-increment: step; position: relative; padding: 18px 18px 18px 65px; background: #0c2935; border: 1px solid var(--line); border-radius: 12px; }
+.steps li::before { content: counter(step, decimal-leading-zero); position: absolute; left: 18px; top: 16px; color: var(--green); font-weight: 800; font-size: 21px; }
+.success { padding: 20px; margin-top: 18px; text-align: center; background: linear-gradient(90deg, #2befa808, #2befa81a, #2befa808); border: 1px solid #78ffd044; border-radius: 12px; color: var(--green); }
+.info-card { padding: 21px; border: 1px solid var(--line); border-radius: 12px; background: #0b2937; }
+.info-card p { color: #c3dbe5; font-size: 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { padding: 3px 10px; border: 1px solid #70eaff30; border-radius: 6px; color: #d3faff; font-size: 12px; background: #70eaff09; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; margin-top: 18px; }
+table { width: 100%; border-collapse: collapse; white-space: nowrap; text-align: left; font-size: 14px; }
+caption { padding: 13px 18px; text-align: left; color: var(--muted); white-space: normal; }
+th { padding: 13px 20px; background: #12424b; color: var(--green); }
+td { padding: 12px 20px; border-top: 1px solid #70eaff16; }
+tbody tr:nth-child(even) { background: #ffffff03; }
+tbody tr:hover { background: #78ffd00a; }
+.soul { display: inline-block; width: 11px; height: 11px; border: 2px solid currentColor; border-radius: 50%; box-shadow: 0 0 7px currentColor; margin-right: 10px; }
+.play-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.play-card { padding: 22px; border: 1px solid var(--line); border-radius: 13px; background: #0b2937; }
+.play-icon { font-size: 28px; margin-bottom: 12px; }
+.play-card p { color: #c2d9e4; font-size: 14px; }
+.time { display: inline-block; margin: 0 5px 14px 0; padding: 3px 10px; border-radius: 6px; color: var(--gold); background: #ffdc9610; font-weight: 700; }
+.links-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.resource { display: flex; align-items: center; gap: 12px; padding: 19px 16px; border: 1px solid var(--line); border-radius: 12px; background: #0c2b38; transition: .2s; }
+a.resource:hover { transform: translateY(-3px); background: #15464e; border-color: var(--green); }
+.resource-icon { font-size: 25px; }
+.resource strong { display: block; font-size: 14px; }
+.resource small { display: block; color: var(--muted); font-size: 12px; }
+.arrow { margin-left: auto; color: var(--green); }
+.disabled { opacity: .58; background: #172630; }
+footer { padding: 0 20px 40px; text-align: center; font-size: 12px; color: var(--muted); }
+footer strong { display: block; font-size: 18px; color: var(--green); letter-spacing: 3px; margin-bottom: 7px; }
+.back-top { position: fixed; right: 18px; bottom: 20px; z-index: 25; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #78ffd066; border-radius: 12px; color: var(--green); background: #123f49; }
+.toast { position: fixed; bottom: 80px; left: 50%; transform: translate(-50%, 12px); z-index: 50; width: max-content; max-width: 90vw; padding: 12px 20px; border: 1px solid var(--green); border-radius: 12px; background: #103c44; text-align: center; opacity: 0; visibility: hidden; transition: .2s; pointer-events: none; }
+.toast.show { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+@media (max-width: 900px) {
+  .nav-grid { grid-template-columns: repeat(3, 1fr); }
+  .play-grid { grid-template-columns: 1fr; }
+  .links-grid { grid-template-columns: 1fr 1fr; }
 }
-.hero-note{font-size:13px;color:#b8dde2;margin-top:22px}
-.panel{
-  position:relative;padding:28px;margin-bottom:25px;
-  background:linear-gradient(135deg,#092c3aF5,#06202bf7);
-  border:1px solid var(--line);border-radius:13px;
-  box-shadow:0 15px 40px #0003;
+@media (max-width: 600px) {
+  html { scroll-padding-top: 76px; }
+  .top-inner { padding: 12px 16px; }
+  .top-links { gap: 12px; font-size: 12px; }
+  .top-links a:first-child { display: none; }
+  .brand { font-size: 13px; }
+  .hero { min-height: 480px; padding: 80px 16px; }
+  .rings { width: 350px; height: 350px; opacity: .35; }
+  h1 { letter-spacing: 0; }
+  .subtitle { letter-spacing: 0; }
+  .eyebrow { letter-spacing: 3px; }
+  main { padding: 0 14px 45px; }
+  .nav-grid { gap: 8px; }
+  .nav-card { padding: 13px 10px; }
+  .nav-card strong { font-size: 13px; }
+  .nav-card small { font-size: 10px; }
+  .section-head { padding: 19px 16px; gap: 12px; }
+  h2 { font-size: 18px; }
+  .content { padding: 18px 16px; }
+  .server-grid, .map-grid, .command-grid, .links-grid { grid-template-columns: 1fr; }
+  .server { padding: 19px; }
+  .ip { font-size: 20px; }
+  .key-row { grid-template-columns: 1fr; gap: 8px; padding: 15px; }
+  .steps li { padding-left: 54px; }
+  .steps li::before { left: 14px; }
+  th, td { padding: 12px 15px; }
 }
-.panel::before{
-  content:"";position:absolute;left:25px;top:-1px;height:3px;width:110px;
-  background:linear-gradient(90deg,var(--cyan),var(--green));
-  box-shadow:0 0 15px #69ffcf66;
-}
-.heading{
-  display:flex;align-items:center;gap:13px;
-  margin-bottom:21px;padding-bottom:17px;border-bottom:1px solid var(--line);
-}
-.num{
-  display:grid;place-items:center;flex:0 0 44px;height:44px;
-  background:linear-gradient(135deg,#12637c,#154b43);
-  color:#b2ffda;border:1px solid #81f8dd66;
-  border-radius:9px;font-size:22px;font-weight:900;
-}
-h2{font-size:23px;line-height:1.5;margin:0;color:#a4f3ee}
-h3{font-size:19px;margin:0 0 10px;color:#a1ffcd}
-p{margin:8px 0}
-strong{color:var(--gold)}
-.muted{color:var(--muted)}
-.nav-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
-.node{
-  display:flex;align-items:center;gap:13px;padding:18px;
-  position:relative;overflow:hidden;text-decoration:none;
-  background:linear-gradient(125deg,#124f62,#10392f);
-  border:1px solid var(--line);border-radius:9px;
-  transition:transform .2s,border-color .2s;
-}
-.node:hover{transform:translateY(-3px);border-color:#a4ffdb}
-.node::after{
-  content:"";position:absolute;inset:-100%;pointer-events:none;
-  background:linear-gradient(110deg,transparent 44%,#b8fff022 50%,transparent 56%);
-  transform:translateX(-70%);animation:sweep 9s linear infinite;
-}
-.node:nth-child(even)::after{animation-delay:-4.5s}
-@keyframes sweep{to{transform:translateX(70%)}}
-.node b{font-size:28px;color:#79efdd}
-.node span{display:block;font-weight:700}
-.node small{font-size:12px;color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-.card{
-  padding:20px;background:#73f3db06;
-  border:1px solid var(--line);border-radius:9px;
-}
-.ip{
-  display:block;user-select:all;margin:13px 0 17px;padding:12px;
-  color:#b0ffdc;background:#031923;border:1px solid #72ead45c;
-  border-radius:6px;font:700 21px/1.5 Consolas,monospace;
-}
-.buttons{display:flex;gap:10px;flex-wrap:wrap}
-.tip,.warning{
-  padding:14px 17px;margin-top:17px;
-  border-left:3px solid var(--cyan);border-radius:4px;
-  background:#64dfff0b;color:#c3edf4;
-}
-.warning{
-  background:#ffdc8c0d;border-color:var(--gold);color:#f6e5c0;
-}
-.danger{
-  padding:20px;margin-bottom:20px;border:1px solid #ffd08d66;
-  border-left:5px solid #ffd08d;border-radius:9px;
-  background:linear-gradient(120deg,#725a242b,#49351f22);
-}
-.danger h3{color:#ffe1a5}
-kbd{
-  display:inline-block;font:inherit;
-  background:#12506a;border:1px solid #96e8f566;
-  color:#d9fffa;padding:0 8px;margin-right:5px;border-radius:5px;
-  box-shadow:0 2px 0 #02131b;
-}
-.subheading{margin:25px 0 14px}
-.commands{display:grid;gap:11px}
-.command{
-  background:#03192388;border:1px solid var(--line);
-  border-radius:7px;padding:12px 16px;
-}
-.command code{color:#b1ffda;font-size:16px}
-.steps{margin:0;padding-left:27px}
-.steps li{padding:0 0 20px 8px}
-.steps li:last-child{padding-bottom:0}
-.steps li::marker{color:#83f8cc;font-weight:900}
-.celebrate{
-  text-align:center;margin-top:23px;padding:20px;
-  background:linear-gradient(120deg,#16876425,#1884b822);
-  border:1px solid #9affca66;border-radius:9px;
-  color:#c2ffdf;font-size:20px;font-weight:900;
-}
-.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.pills span{
-  padding:3px 11px;background:#123c49;
-  border:1px solid var(--line);border-radius:20px;font-size:14px;
-}
-.table-wrap{
-  overflow-x:auto;margin-top:18px;border:1px solid var(--line);
-  border-radius:9px;
-}
-table{width:100%;border-collapse:collapse;min-width:440px}
-th,td{text-align:left;padding:13px 17px;border-bottom:1px solid #70e3cf22}
-th{background:#124552;color:#b7ffe0}
-tbody tr:nth-child(even){background:#6cffe908}
-tbody tr:last-child td{border-bottom:0}
-td:first-child{font-weight:700;color:#b4edff}
-.rank-dot{
-  display:inline-block;width:9px;height:9px;border-radius:50%;
-  margin-right:9px;background:var(--dot);box-shadow:0 0 9px var(--dot);
-}
-.times{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0}
-.times span{
-  padding:7px 16px;color:#ffe1a5;font-size:22px;font-weight:900;
-  background:#c7983018;border:1px solid #f8d38266;border-radius:7px;
-}
-.flow{
-  display:flex;justify-content:center;align-items:center;
-  flex-wrap:wrap;gap:9px;margin-top:18px;padding:16px;
-  border:1px solid var(--line);border-radius:8px;
-}
-.flow span{padding:5px 11px;border-radius:5px;background:#104c4e;color:#c6ffe9}
-.flow i{font-style:normal;color:#89f6d3}
-.resource{display:flex;flex-direction:column;align-items:flex-start}
-.resource .icon{font-size:32px}
-.resource p{color:var(--muted);margin-bottom:18px}
-.resource .btn{margin-top:auto}
-.resource .fine{font-size:12px;margin:12px 0 0}
-.lottery{
-  border-color:#f4d59166;
-  background:linear-gradient(125deg,#18494b,#344735);
-}
-footer{text-align:center;padding:22px 12px 65px;font-size:13px;color:var(--muted)}
-footer strong{font-size:19px;color:#a6ffd8}
-.top{
-  position:fixed;right:14px;bottom:18px;z-index:40;
-  padding:7px 12px;background:#10404cec;
-  border:1px solid #96f0d566;border-radius:7px;text-decoration:none;
-}
-.toast{
-  position:fixed;bottom:80px;left:50%;z-index:50;
-  transform:translateX(-50%);max-width:90vw;
-  padding:12px 20px;background:#0c3c48;
-  border:1px solid #b1ffdb;border-radius:9px;color:#e0fff0;
-}
-.toast:empty{display:none}
-body.paused *,body.paused *::before,body.paused *::after{
-  animation-play-state:paused!important;
-}
-@media(max-width:760px){
-  .nav-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .grid{grid-template-columns:1fr}
-  .hero{min-height:590px;padding:75px 6px 50px}
-  .panel{padding:20px}
-  h2{font-size:20px}
-  .header-right a{display:none}
-}
-@media(max-width:420px){
-  .brand{font-size:14px}
-  .panel{padding:16px}
-  .node{padding:12px;gap:9px}
-  .node b{font-size:22px}
-  .node span{font-size:14px}
-  .node small{font-size:11px}
-  .ip{font-size:18px}
-  .eyebrow{font-size:11px;letter-spacing:2px}
-}
-@media(prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  *,*::before,*::after{animation:none!important;transition:none!important}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 </style>
 </head>
-<body>
-<div class="background" aria-hidden="true"></div>
+<body id="top">
+<div class="background" aria-hidden="true"><div class="stars"></div></div>
 
-<header>
-  <div class="wrap bar">
-    <a class="brand" href="#home">7377 · 斗罗大陆</a>
-    <div class="header-right">
-      <a href="#navigation">教程导航</a>
-      <a href="#resources">视频 / 社群</a>
-      <button class="motion" id="motion" type="button" aria-pressed="false">
-        暂停动画
-      </button>
-    </div>
+<header class="topbar">
+  <div class="top-inner">
+    <a class="brand" href="#top"><span>7377</span> · 斗罗大陆</a>
+    <nav class="top-links" aria-label="快捷导航">
+      <a href="#servers">服务器直连</a>
+      <a href="#start">新手教程</a>
+      <a href="#resources">资源入口 ↗</a>
+    </nav>
   </div>
 </header>
 
-<section class="hero" id="home">
-  <div class="aura" aria-hidden="true"></div>
-  <div class="ring r1" aria-hidden="true"></div>
-  <div class="ring r2" aria-hidden="true"></div>
-  <div class="ring r3" aria-hidden="true"></div>
-  <div class="ring r4" aria-hidden="true"></div>
-
-  <svg class="grass" viewBox="0 0 1400 420"
-       preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-    <defs>
-      <linearGradient id="leaf" x1="0" y1="1" x2=".8" y2="0">
-        <stop stop-color="#064c52"/>
-        <stop offset=".6" stop-color="#19bdaf"/>
-        <stop offset="1" stop-color="#78efff"/>
-      </linearGradient>
-      <g id="plant" fill="url(#leaf)" stroke="#7dfbe2" stroke-width="1">
-        <path d="M120 420 Q90 240 20 85 Q150 215 120 420"/>
-        <path d="M120 420 Q150 185 210 25 Q195 260 120 420"/>
-        <path d="M120 420 Q45 300 0 255 Q115 285 120 420"/>
-        <path d="M120 420 Q200 265 290 190 Q220 330 120 420"/>
-        <path d="M120 420 Q115 150 92 8 Q165 195 120 420"/>
-      </g>
-    </defs>
-    <use href="#plant" transform="translate(10 15)"/>
-    <use href="#plant" transform="translate(220 120) scale(.75)"/>
-    <use href="#plant" transform="translate(1390 15) scale(-1 1)"/>
-    <use href="#plant" transform="translate(1180 120) scale(-.75 .75)"/>
-  </svg>
-
-  <div class="hero-content">
-    <div class="eyebrow">魂环觉醒 · 武魂集结 · 开启成神之路</div>
-    <div class="title"><h1>【7377斗罗大陆】</h1></div>
-    <p class="slogan">
-      <span>玩方舟 先选好服务器</span><span>玩着才能不烧心</span>
-    </p>
-    <div class="tags">
-      <span>新手村 · 孤岛</span>
-      <span>上界 · 仙境</span>
-      <span>魂环 / 武魂 / 魂骨</span>
-      <span>神之九考</span>
-    </div>
-    <div class="actions">
-      <a class="btn" href="#servers">🎮 选择服务器</a>
-      <a class="btn secondary" href="#starter">📖 新手入门指南</a>
-      <a class="btn secondary"
-         href="https://qm.qq.com/q/tUjNnSJAl2"
-         target="_blank" rel="noopener noreferrer">💬 加入萌新群</a>
-    </div>
-    <p class="hero-note">从第一枚魂环开始，踏上你的魂师成长之旅。</p>
+<div class="hero">
+  <div class="rings" aria-hidden="true">
+    <div class="ring"></div><div class="ring"></div>
+    <div class="ring"></div><div class="ring"></div>
   </div>
-</section>
+  <div class="hero-content">
+    <div class="eyebrow">武魂觉醒 · 魂环加冕 · 开启成神之路</div>
+    <h1>7377斗罗大陆</h1>
+    <p class="subtitle">玩方舟 先选好服务器玩着才能不烧心</p>
+    <div class="tags">
+      <span class="tag">✦ 双地图探索</span>
+      <span class="tag">◎ 魂环养成</span>
+      <span class="tag">⚔ 专属召唤</span>
+      <span class="tag">♜ 神之九考</span>
+    </div>
+    <div class="hero-actions">
+      <a class="btn primary" href="#servers">🎮 立即开启冒险</a>
+      <a class="btn" href="#start">查看入服教程 ↓</a>
+    </div>
+  </div>
+</div>
 
-<main class="wrap">
-  <nav class="panel" id="navigation" aria-label="六大教程节点">
-    <div class="heading">
-      <span class="num">✦</span>
-      <h2>魂师指南 · 点击节点直达</h2>
-    </div>
-    <div class="nav-grid">
-      <a class="node" href="#servers">
-        <b>01</b><div><span>服务器直连</span><small>双服入口 / 复制 IP</small></div>
-      </a>
-      <a class="node" href="#controls">
-        <b>02</b><div><span>按键与命令</span><small>使用明细 / 重要须知</small></div>
-      </a>
-      <a class="node" href="#starter">
-        <b>03</b><div><span>进服基础教程</span><small>魂力测试 / 专属激活</small></div>
-      </a>
-      <a class="node" href="#world">
-        <b>04</b><div><span>地图与魂兽</span><small>魂力等级 / 挑战参考</small></div>
-      </a>
-      <a class="node" href="#growth">
-        <b>05</b><div><span>发育与副本</span><small>装备制作 / 世界 BOSS</small></div>
-      </a>
-      <a class="node" href="#resources">
-        <b>06</b><div><span>视频与专属表</span><small>教程 / QQ群 / 卡密抽奖</small></div>
-      </a>
-    </div>
+<main>
+  <nav class="nav-grid" aria-label="六大教程节点">
+    <a class="nav-card" href="#servers"><span>01 / CONNECT</span><strong>🎮 服务器直连</strong><small>孤岛 · 仙境</small></a>
+    <a class="nav-card" href="#keys"><span>02 / CONTROL</span><strong>⌨ 按键与命令</strong><small>操作明细 · 注意事项</small></a>
+    <a class="nav-card" href="#start"><span>03 / BEGIN</span><strong>✦ 进服基础教程</strong><small>新手起步 · 武魂觉醒</small></a>
+    <a class="nav-card" href="#world"><span>04 / WORLD</span><strong>◎ 地图与等级</strong><small>魂兽年限 · 魂力成长</small></a>
+    <a class="nav-card" href="#play"><span>05 / CHALLENGE</span><strong>⚔ 发育与副本</strong><small>材料获取 · 世界BOSS</small></a>
+    <a class="nav-card" href="#resources"><span>06 / RESOURCES</span><strong>↗ 视频与专属表</strong><small>教程资源 · 社群入口</small></a>
   </nav>
 
-  <section class="panel" id="servers" aria-labelledby="servers-title">
-    <div class="heading">
-      <span class="num">01</span><h2 id="servers-title">🎮 服务器直连</h2>
+  <section class="section" id="servers">
+    <div class="section-head">
+      <span class="number">01</span>
+      <div><h2>🎮 服务器直连</h2><p>选择你的起点，踏入斗罗大陆</p></div>
     </div>
-    <div class="grid">
-      <article class="card">
-        <h3>斗罗大陆新手村</h3>
-        <p class="muted">地图【孤岛】</p>
-        <code class="ip">103.91.208.155:52005</code>
-        <div class="buttons">
-          <button class="btn" type="button" data-ip="103.91.208.155:52005">
-            📋 复制 IP
-          </button>
-          <a class="btn secondary" href="steam://connect/103.91.208.155:52005">
-            🎮 Steam 连接
-          </a>
-        </div>
-      </article>
-      <article class="card">
-        <h3>斗罗大陆上界</h3>
-        <p class="muted">地图【仙境】</p>
-        <code class="ip">103.91.208.155:52009</code>
-        <div class="buttons">
-          <button class="btn" type="button" data-ip="103.91.208.155:52009">
-            📋 复制 IP
-          </button>
-          <a class="btn secondary" href="steam://connect/103.91.208.155:52009">
-            🎮 Steam 连接
-          </a>
-        </div>
-      </article>
-    </div>
-    <div class="tip">
-      💡 复制 IP 地址添加到 Steam 收藏。Steam 连接按钮需要本机安装 Steam，
-      浏览器可能会提示打开客户端。若无法连接或查询，请向服主确认服务器状态及所需端口。
-    </div>
-  </section>
-
-  <section class="panel" id="controls" aria-labelledby="controls-title">
-    <div class="heading">
-      <span class="num">02</span>
-      <h2 id="controls-title">按键 · 命令 · 注意事项 · 使用明细</h2>
-    </div>
-    <div class="danger">
-      <h3>⚠️ 每次上线必做：游戏内自杀 → 登录斗罗账号</h3>
-      <p>
-        按 <kbd>F1</kbd> 登录斗罗账号，<strong>账号、密码均为 123</strong>。
-        每次上线需自杀、登录，否则
-        <strong>吸收魂环、魂骨、武魂、魂力、经验以及各种功能会失效！</strong>
-      </p>
-    </div>
-
-    <h3 class="subheading">1 · 按键项</h3>
-    <div class="grid">
-      <article class="card">
-        <h3><kbd>F1</kbd> 斗罗账号登录</h3>
-        <p>账号：<strong>123</strong>　密码：<strong>123</strong></p>
-        <p>每次上线先完成游戏内自杀，再登录斗罗账号。</p>
-      </article>
-      <article class="card">
-        <h3><kbd>F2</kbd> 天宫造物</h3>
-        <p>随身工作台，用于制作<strong>魂环、魂骨、武魂</strong>等物品。</p>
-      </article>
-      <article class="card">
-        <h3><kbd>F2</kbd> 专属核心</h3>
-        <p>用于激活、召唤专属。召唤过一次后，可<strong>长按 F</strong>快捷召唤。</p>
-      </article>
-      <article class="card">
-        <h3><kbd>F4</kbd> 斗罗系统</h3>
-        <p>用于查看、装备<strong>魂环、武魂、魂骨</strong>。</p>
-        <div class="warning">
-          魂环：可拆卸、可丢弃。<br>
-          武魂：不可拆卸，可遗忘；<strong>遗忘后就消失！</strong><br>
-          魂骨：可拆卸，但<strong>不可丢弃！</strong>
-          注意背包空间，避免满背包魂骨又丢不掉。
-        </div>
-      </article>
-      <article class="card">
-        <h3><kbd>F6</kbd> 商城与日常</h3>
-        <p>【金币商城】【点卷商城】：购买物品。</p>
-        <p>【礼包】：内置多种实用礼包，助你快速发育。</p>
-        <p>【回收商城】：以物换物。</p>
-        <p>【任务系统】：每日刷新。</p>
-      </article>
-      <article class="card">
-        <h3><kbd>F9</kbd> 玩法福利</h3>
-        <p>包含<strong>【战令】【签到】【副本】</strong>。</p>
-        <p><strong>副本简介与注意事项请认真查看！</strong></p>
-      </article>
-      <article class="card">
-        <h3><kbd>长按 Y</kbd> 云端背包</h3>
-        <p>召唤云端背包，你最安全的小金库。</p>
-      </article>
-    </div>
-
-    <h3 class="subheading">2 · 公屏命令项</h3>
-    <div class="commands">
-      <div class="command"><code>/自杀</code>：游戏内自杀，CD 10 秒。</div>
-      <div class="command"><code>/绑定 +QQ</code>：绑定游戏，自动领取 VIP。</div>
-      <div class="command"><code>/领取邮件</code>：领取抽奖、卡密获取的物品。</div>
-      <div class="command"><code>/签到</code>：与群内签到一致，凌晨 00:00 更新。</div>
-    </div>
-  </section>
-
-  <section class="panel" id="starter" aria-labelledby="starter-title">
-    <div class="heading">
-      <span class="num">03</span><h2 id="starter-title">进服基础教程</h2>
-    </div>
-    <div class="warning" style="margin:0 0 22px">
-      开始前先完成每次上线必做操作：
-      <strong>游戏内自杀 → F1 登录（账号 / 密码：123）</strong>。
-    </div>
-    <ol class="steps">
-      <li><strong>完成基本加点，解锁印痕。</strong></li>
-      <li>传送至服主场地，进行<strong>【魂力测试】</strong>。</li>
-      <li>
-        按 <kbd>F6</kbd> 打开界面，点击右下角进入商城，
-        在上方选择【礼包】，领取新手<strong>【抽奖礼盒】</strong>。
-      </li>
-      <li>
-        在背包内使用礼盒，抽取新手<strong>【专属】与【武魂】</strong>；
-        抽到的武魂按 <kbd>E</kbd> 吸收。
-      </li>
-      <li>
-        按 <kbd>F4</kbd> 进入斗罗 UI，左侧选择<strong>【武魂系统】</strong>，
-        右键选择并点击佩戴。
-      </li>
-      <li>
-        按 <kbd>F2</kbd> 打开<strong>【专属核心】</strong>，
-        找到你抽到的对应专属，点击激活；
-        在右侧栏选择后点击召唤。后续即可<strong>长按 F</strong>快捷召唤。
-      </li>
-    </ol>
-    <div class="celebrate">
-      🎉 恭喜你正式成为一名魂士！<br>即将开启你的成神之路！🎉
-    </div>
-  </section>
-
-  <section class="panel" id="world" aria-labelledby="world-title">
-    <div class="heading">
-      <span class="num">04</span>
-      <h2 id="world-title">地图 · 魂兽 · 魂力 · 等级介绍</h2>
-    </div>
-    <h3 class="subheading">1 · 两大服务器与魂兽分布</h3>
-    <div class="grid">
-      <article class="card">
-        <h3>🌿 新手村 · 孤岛</h3>
-        <p>新手村只会出现以下年限魂兽：</p>
-        <div class="pills">
-          <span>百年</span><span>千年</span><span>万年</span>
-          <span>十万年</span><span>百万年</span><span>千万年</span>
-        </div>
-      </article>
-      <article class="card">
-        <h3>🌌 上界 · 仙境</h3>
-        <p>上界魂兽更为强大：</p>
-        <div class="pills">
-          <span>百万年</span><span>千万年</span><span>亿年</span>
-          <span>十亿年</span><span>百亿年</span><span>千亿年</span>
-          <span>万亿年</span><span>神魂兽</span>
-        </div>
-      </article>
-    </div>
-
-    <h3 class="subheading">2 · 魂力与等级，两条成长路线</h3>
-    <div class="grid">
-      <article class="card">
-        <h3>💠 魂力等级 → 魂环插槽</h3>
-        <p>
-          魂力等级非常重要，决定魂环佩戴数量。
-          <strong>每 10 级可解锁一个魂环插槽，最高可佩戴十个魂环！</strong>
-        </p>
-      </article>
-      <article class="card">
-        <h3>✨ 等级 100 → 传承与神之九考</h3>
-        <p>
-          等级达到<strong>100 级</strong>可开启传承系统，
-          开启<strong>神之九考</strong>；完成后即可成神，增加大量属性。
-        </p>
-      </article>
-    </div>
-
-    <h3 class="subheading">3 · 魂师阶段与挑战年限参考</h3>
-    <p class="muted">
-      地图全图随机刷怪，数量巨大。以下为魂力等级对应的挑战建议；
-      按服主说明，实际挑战可更轻松，可结合自身情况尝试越级。
-    </p>
-    <div class="table-wrap" role="region" aria-label="魂力等级挑战参考表" tabindex="0">
-      <table>
-        <thead>
-          <tr><th scope="col">魂师阶段</th><th scope="col">魂力等级</th><th scope="col">建议挑战</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><span class="rank-dot" style="--dot:#eefaff"></span>魂士</td><td>1–9 级</td><td>百年魂兽</td></tr>
-          <tr><td><span class="rank-dot" style="--dot:#ffe38c"></span>魂师</td><td>10–19 级</td><td>千年魂兽</td></tr>
-          <tr><td><span class="rank-dot" style="--dot:#c49aff"></span>大魂师</td><td>20–29 级</td><td>万年魂兽</td></tr>
-          <tr><td><span class="rank-dot" style="--dot:#ff7ca6"></span>魂尊</td><td>30–39 级</td><td>十万年魂兽</td></tr>
-          <tr><td><span class="rank-dot" style="--dot:#ffbf70"></span>魂宗</td><td>40–49 级</td><td>百万年魂兽</td></tr>
-          <tr><td><span class="rank-dot" style="--dot:#7dffd0"></span>魂王</td><td>50–59 级</td><td>千万年魂兽</td></tr>
-          <tr><td><span class="rank-dot" style="--dot:#6ce8ff"></span>魂帝</td><td>60–69 级</td><td>亿年魂兽</td></tr>
-          <tr><td><span class="rank-dot" style="--dot:#83aaff"></span>魂圣</td><td>70–79 级</td><td>十亿年魂兽</td></tr>
-          <tr><td><span class="rank-dot" style="--dot:#dfacff"></span>魂斗罗</td><td>80–89 级</td><td>百亿年魂兽</td></tr>
-          <tr><td><span class="rank-dot" style="--dot:#fff0b2"></span>封号斗罗</td><td>90–99 级</td><td>千亿年 / 万亿年 / 神魂兽</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <section class="panel" id="growth" aria-labelledby="growth-title">
-    <div class="heading">
-      <span class="num">05</span>
-      <h2 id="growth-title">发育教程 · 副本 · 世界 BOSS 玩法</h2>
-    </div>
-    <article class="card">
-      <h3>1 · 击杀魂兽，提升魂力与等级</h3>
-      <p>
-        击杀地图里的魂兽可获取<strong>【魂力药剂与经验药剂】</strong>，
-        这是提升魂力与等级的主要来源。
-      </p>
-      <p>
-        还会掉落<strong>【璀璨魔导器与魂兽精粹】</strong>，
-        主要用于<strong>【F2 天宫造物】</strong>制作魂环、魂骨等装备，提升自身。
-      </p>
-      <p><strong>越强大的魂兽，掉落物品数量越多！</strong></p>
-      <div class="flow">
-        <span>击杀魂兽</span><i>→</i><span>获取药剂 / 材料</span>
-        <i>→</i><span>提升魂力 / 等级</span><i>→</i><span>制作魂环 / 魂骨</span>
+    <div class="content">
+      <div class="server-grid">
+        <article class="server">
+          <div class="server-top"><h3>斗罗大陆 · 新手村</h3><span class="map-label">地图：孤岛</span></div>
+          <code class="ip">103.91.208.155:52005</code>
+          <div class="actions">
+            <a class="btn primary" href="steam://connect/103.91.208.155:52005">🎮 Steam 直连</a>
+            <button class="btn" type="button" data-copy="103.91.208.155:52005">复制 IP</button>
+          </div>
+        </article>
+        <article class="server">
+          <div class="server-top"><h3>斗罗大陆 · 上界</h3><span class="map-label">地图：仙境</span></div>
+          <code class="ip">103.91.208.155:52009</code>
+          <div class="actions">
+            <a class="btn primary" href="steam://connect/103.91.208.155:52009">🎮 Steam 直连</a>
+            <button class="btn" type="button" data-copy="103.91.208.155:52009">复制 IP</button>
+          </div>
+        </article>
       </div>
-    </article>
-
-    <article class="card" style="margin-top:18px">
-      <h3>2 · 银行与副本，获取进阶材料</h3>
-      <p>
-        在背包印痕内制作<strong>【银行】工作台</strong>，
-        可制作斗罗专用货币，用于<strong>【F6 回收商城】</strong>兑换各种物品。
-      </p>
-      <p>
-        主要兑换<strong>【副本券】</strong>进行副本挑战。
-        副本产出更为稀有的物品，可作为
-        <strong>【魂骨、武魂、神器、外魂骨】</strong>的制作材料。
-      </p>
-      <p>
-        更困难的副本挑战还能产出<strong>专属碎片</strong>，
-        集齐后可激活专属！
-      </p>
-      <div class="warning">
-        ⚠️ 进入副本前，请认真查看 <kbd>F9</kbd> 内的副本简介与注意事项。
-      </div>
-    </article>
-
-    <article class="card" style="margin-top:18px">
-      <h3>3 · 新手村世界 BOSS</h3>
-      <p>新手村每天以下时间会刷新强大 BOSS，击杀可获取大量奖励：</p>
-      <div class="times">
-        <span>中午 12:00</span><span>晚上 20:00</span>
-      </div>
-      <div class="warning">
-        ⚠️ 世界 BOSS 物品<strong>不会直接进入玩家背包</strong>，
-        而是<strong>掉落地上，需下专属拾取！</strong>
-      </div>
-    </article>
+      <div class="note">💡 复制 IP 地址添加到 Steam 收藏。直连按钮需在已安装 Steam 的电脑上使用。</div>
+    </div>
   </section>
 
-  <section class="panel" id="resources" aria-labelledby="resources-title">
-    <div class="heading">
-      <span class="num">06</span>
-      <h2 id="resources-title">视频教程 · 专属表 · 社群入口</h2>
+  <section class="section" id="keys">
+    <div class="section-head">
+      <span class="number">02</span>
+      <div><h2>按键 · 命令 · 注意事项 · 使用明细</h2><p>先掌握基础操作，再开启魂师之旅</p></div>
     </div>
-    <div class="grid">
-      <article class="card resource">
-        <span class="icon" aria-hidden="true">🎬</span>
-        <h3>抖音 · 斗罗大陆教程</h3>
-        <p>点击跳转视频教程，查看斗罗大陆玩法教学。</p>
-        <a class="btn" href="https://v.douyin.com/RPFMj6Jsib4/"
-           target="_blank" rel="noopener noreferrer">▶ 打开抖音教程</a>
-      </article>
-      <article class="card resource">
-        <span class="icon" aria-hidden="true">📊</span>
-        <h3>斗罗大陆专属表</h3>
-        <p>点击打开腾讯文档，查看斗罗大陆专属表。</p>
-        <a class="btn"
-           href="https://docs.qq.com/sheet/DTmxwYWpXaVF6TUZz?tab=BB08J2"
-           target="_blank" rel="noopener noreferrer">📋 查看专属表</a>
-      </article>
-      <article class="card resource">
-        <span class="icon" aria-hidden="true">💬</span>
-        <h3>7377萌新服务器 · QQ群</h3>
-        <p>点击加入群聊，与玩家交流玩法、查看服内公告。</p>
-        <a class="btn" href="https://qm.qq.com/q/tUjNnSJAl2"
-           target="_blank" rel="noopener noreferrer">👥 点击加入群聊</a>
-      </article>
-      <article class="card resource lottery">
-        <span class="icon" aria-hidden="true">🎁</span>
-        <h3>7377 · 卡密抽奖</h3>
-        <p>点击进入卡密抽奖页面，查看活动内容与规则。</p>
-        <a class="btn gold" href="https://buy.jry0.com/shop/ARK7377"
-           target="_blank" rel="noopener noreferrer">✨ 打开卡密抽奖页面</a>
-        <p class="fine">
-          奖品、概率、费用与规则请以活动页面公示为准；
-          参与前请仔细阅读，理性消费。
-        </p>
-      </article>
+    <div class="content">
+      <h3>1、按键项</h3>
+      <div class="key-list">
+        <div class="key-row">
+          <div><kbd>F1</kbd></div>
+          <div><strong>登录斗罗账号</strong><p>账号、密码均为 <strong>123</strong>。</p>
+            <div class="warning">⚠ 每次上线需自杀、登录，否则吸收魂环、魂骨、武魂、魂力、经验以及各种功能会失效！</div>
+          </div>
+        </div>
+        <div class="key-row">
+          <div><kbd>F2</kbd></div>
+          <div><strong>天宫造物</strong><p>随身工作台！用于制作魂环、魂骨、武魂等物品。</p></div>
+        </div>
+        <div class="key-row">
+          <div><kbd>F2</kbd></div>
+          <div><strong>专属核心</strong><p>激活、召唤专属。召唤过一次后，可长按 <kbd>F</kbd> 进行快捷召唤。</p></div>
+        </div>
+        <div class="key-row">
+          <div><kbd>F4</kbd></div>
+          <div><strong>斗罗系统</strong><p>用于查看、装备魂环、武魂、魂骨。</p>
+            <div class="warning">
+              魂环可拆卸、丢弃。<br>
+              武魂不可拆卸，可遗忘；<strong>遗忘后就消失了！</strong><br>
+              魂骨可拆卸，但不可丢弃！满背包的魂骨看着闹心又丢不掉，请留意背包空间。
+            </div>
+          </div>
+        </div>
+        <div class="key-row">
+          <div><kbd>F6</kbd></div>
+          <div><strong>商城</strong>
+            <p>【金币商城】【点卷商城】：购买物品。</p>
+            <p>【礼包】：内置许多用得到的礼包物品，助你快速发育。</p>
+            <p>【回收商城】：以物换物。【任务系统】：每日刷新。</p>
+          </div>
+        </div>
+        <div class="key-row">
+          <div><kbd>F9</kbd></div>
+          <div><strong>战令 · 签到 · 副本</strong><p>包含【战令】【签到】【副本】玩法福利。</p>
+            <div class="warning">⚠ 副本简介与注意事项请认真查看！</div>
+          </div>
+        </div>
+        <div class="key-row">
+          <div><kbd>长按 Y</kbd></div>
+          <div><strong>云端背包</strong><p>召唤云端背包，你最安全的小金库。</p></div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <h3>2、公屏命令项</h3>
+      <div class="command-grid">
+        <div class="command"><code>/自杀</code><p>顾名思义，CD 10 秒。</p></div>
+        <div class="command"><code>/绑定 +QQ</code><p>绑定游戏，自动领取 VIP。</p></div>
+        <div class="command"><code>/领取邮件</code><p>领取抽奖、卡密获取的物品。</p></div>
+        <div class="command"><code>/签到</code><p>与群内签到一致，凌晨 00:00 更新。</p></div>
+      </div>
     </div>
-    <div class="tip">
-      💡 外部链接将在新标签页打开。抖音、QQ 等链接可能需要对应客户端，
-      或受登录状态、浏览器及平台规则影响。
+  </section>
+
+  <section class="section" id="start">
+    <div class="section-head">
+      <span class="number">03</span>
+      <div><h2>进服基础教程</h2><p>跟随六个步骤，完成你的首次觉醒</p></div>
+    </div>
+    <div class="content">
+      <ol class="steps">
+        <li>完成基本加点，解锁印痕。</li>
+        <li>传送至服主场地，进行<strong>【魂力测试】</strong>。</li>
+        <li>按 <kbd>F6</kbd>，在打开界面的右下角点击进入商城；上方选择<strong>【礼包】</strong>，领取新手<strong>【抽奖礼盒】</strong>。</li>
+        <li>在背包内使用礼盒，抽取新手<strong>【专属】</strong>与<strong>【武魂】</strong>。抽到的武魂按 <kbd>E</kbd> 吸收。</li>
+        <li>按 <kbd>F4</kbd> 进入斗罗 UI，左侧选择<strong>【武魂系统】</strong>，右键选择并点击佩戴。</li>
+        <li>按 <kbd>F2</kbd>，点击<strong>【专属核心】</strong>，找到你抽到的对应专属并点击激活；在右侧栏选择后点击召唤。后续即可长按 <kbd>F</kbd> 进行快捷召唤。</li>
+      </ol>
+      <div class="success">🎉 恭喜您正式成为一名魂士！<br>即将开启您的成神之路！🎉</div>
+    </div>
+  </section>
+
+  <section class="section" id="world">
+    <div class="section-head">
+      <span class="number">04</span>
+      <div><h2>地图 · 魂兽 · 魂力 · 等级介绍</h2><p>了解魂兽分布，规划你的成长路线</p></div>
+    </div>
+    <div class="content">
+      <h3>1、地图与魂兽刷新</h3>
+      <p>斗罗大陆共有两个服务器，地图全图随机刷怪，数量巨大。</p>
+      <div class="map-grid">
+        <article class="info-card">
+          <h3>🌿 新手村 · 孤岛</h3>
+          <p>只会出现以下年限的魂兽：</p>
+          <div class="chips">
+            <span class="chip">百年</span><span class="chip">千年</span>
+            <span class="chip">万年</span><span class="chip">十万年</span>
+            <span class="chip">百万年</span><span class="chip">千万年</span>
+          </div>
+        </article>
+        <article class="info-card">
+          <h3>🌌 上界 · 仙境</h3>
+          <p>魂兽更为强大，分别为：</p>
+          <div class="chips">
+            <span class="chip">百万年</span><span class="chip">千万年</span>
+            <span class="chip">亿年</span><span class="chip">十亿年</span>
+            <span class="chip">百亿年</span><span class="chip">千亿年</span>
+            <span class="chip">万亿年</span><span class="chip">神魂兽</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="divider"></div>
+      <h3>2、魂力与等级</h3>
+      <div class="map-grid">
+        <article class="info-card">
+          <h3>◎ 魂力 · 解锁魂环</h3>
+          <p>魂力等级最为重要，决定您的魂环佩戴数量。<strong>每 10 级解锁一个魂环插槽，最高可佩戴十个魂环！</strong></p>
+        </article>
+        <article class="info-card">
+          <h3>✦ 等级 · 开启传承</h3>
+          <p>等级同样重要。达到 <strong>100 级</strong>可开启传承系统，开启<strong>神之九考</strong>，完成后即可成神，增加大量属性！</p>
+        </article>
+      </div>
+
+      <div class="divider"></div>
+      <h3>3、魂兽挑战建议</h3>
+      <p>以下为魂师魂力等级对应的魂兽挑战建议，实际挑战可能更为轻松，可尝试越级挑战！</p>
+      <div class="table-wrap">
+        <table>
+          <caption>魂力等级与建议挑战魂兽年限</caption>
+          <thead><tr><th>魂师称号</th><th>魂力等级</th><th>建议挑战</th></tr></thead>
+          <tbody>
+            <tr><td><span class="soul" style="color:#e7f8ff"></span>魂士</td><td>1–9 级</td><td>百年魂兽</td></tr>
+            <tr><td><span class="soul" style="color:#ffe28b"></span>魂师</td><td>10–19 级</td><td>千年魂兽</td></tr>
+            <tr><td><span class="soul" style="color:#ca9dff"></span>大魂师</td><td>20–29 级</td><td>万年魂兽</td></tr>
+            <tr><td><span class="soul" style="color:#ff8ba4"></span>魂尊</td><td>30–39 级</td><td>十万年魂兽</td></tr>
+            <tr><td><span class="soul" style="color:#ffbc7d"></span>魂宗</td><td>40–49 级</td><td>百万年魂兽</td></tr>
+            <tr><td><span class="soul" style="color:#fff1ad"></span>魂王</td><td>50–59 级</td><td>千万年魂兽</td></tr>
+            <tr><td><span class="soul" style="color:#7eeaff"></span>魂帝</td><td>60–69 级</td><td>亿年魂兽</td></tr>
+            <tr><td><span class="soul" style="color:#75ffd0"></span>魂圣</td><td>70–79 级</td><td>十亿年魂兽</td></tr>
+            <tr><td><span class="soul" style="color:#a8b6ff"></span>魂斗罗</td><td>80–89 级</td><td>百亿年魂兽</td></tr>
+            <tr><td><span class="soul" style="color:#ffdc96"></span>封号斗罗</td><td>90–99 级</td><td>千亿年 / 万亿年 / 神魂兽</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="play">
+    <div class="section-head">
+      <span class="number">05</span>
+      <div><h2>发育教程 · 副本 · 世界 BOSS 玩法</h2><p>积累材料，强化装备，挑战更强大的敌人</p></div>
+    </div>
+    <div class="content">
+      <div class="play-grid">
+        <article class="play-card">
+          <div class="play-icon">⚔️</div>
+          <h3>1、击杀魂兽 · 提升实力</h3>
+          <p>击杀地图里的魂兽，可获取<strong>【魂力药剂与经验药剂】</strong>，这是提升魂力与等级的主要途径。</p>
+          <p>还会掉落<strong>【璀璨魔导器与魂兽精粹】</strong>，主要用于<strong>【F2 天宫造物】</strong>制作魂环、魂骨等装备，提升自身实力。</p>
+          <div class="note">越强大的魂兽，掉落的物品数量越多！</div>
+        </article>
+        <article class="play-card">
+          <div class="play-icon">🏛️</div>
+          <h3>2、银行兑换 · 副本挑战</h3>
+          <p>在背包印痕内制作<strong>【银行】</strong>工作台，可制作斗罗专用货币，用于<strong>【F6 回收商城】</strong>兑换各种物品。</p>
+          <p>主要兑换<strong>【副本券】</strong>进行副本挑战。副本产出更稀有的物品，可用于制作<strong>【魂骨、武魂、神器、外魂骨】</strong>。</p>
+          <p>更困难的副本还能产出<strong>专属碎片</strong>，集齐后可激活专属！</p>
+        </article>
+        <article class="play-card">
+          <div class="play-icon">🐉</div>
+          <h3>3、世界 BOSS · 限时讨伐</h3>
+          <p>新手村每天在以下时间刷新强大 BOSS：</p>
+          <span class="time">中午 12:00</span>
+          <span class="time">晚上 20:00</span>
+          <p>击杀世界 BOSS，可获取大量奖励。</p>
+          <div class="warning">⚠ 世界 BOSS 物品不会直接进入玩家背包，而是<strong>掉落地上，需下专属拾取！</strong></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="resources">
+    <div class="section-head">
+      <span class="number">06</span>
+      <div><h2>视频教程 · 专属表</h2><p>教程资料、社群与其他服务器入口</p></div>
+    </div>
+    <div class="content">
+      <div class="links-grid">
+        <a class="resource" href="https://v.douyin.com/RPFMj6Jsib4/" target="_blank" rel="noopener noreferrer">
+          <span class="resource-icon">🎬</span>
+          <div><strong>抖音 · 斗罗大陆教程</strong><small>观看视频教程</small></div><span class="arrow">↗</span>
+        </a>
+        <a class="resource" href="https://docs.qq.com/sheet/DTmxwYWpXaVF6TUZz?tab=BB08J2" target="_blank" rel="noopener noreferrer">
+          <span class="resource-icon">📋</span>
+          <div><strong>斗罗大陆专属表</strong><small>腾讯文档 · 在线查看</small></div><span class="arrow">↗</span>
+        </a>
+        <a class="resource" href="https://qm.qq.com/q/tUjNnSJAl2" target="_blank" rel="noopener noreferrer">
+          <span class="resource-icon">💬</span>
+          <div><strong>7377萌新服务器</strong><small>点击加入 QQ 群聊</small></div><span class="arrow">↗</span>
+        </a>
+        <a class="resource" href="https://7377yyds.github.io/" target="_blank" rel="noopener noreferrer">
+          <span class="resource-icon">📖</span>
+          <div><strong>斗罗专属表 · 网页版</strong><small>查看专属资料</small></div><span class="arrow">↗</span>
+        </a>
+        <a class="resource" href="https://buy.jry0.com/shop/ARK7377" target="_blank" rel="noopener noreferrer">
+          <span class="resource-icon">🎁</span>
+          <div><strong>卡密抽奖</strong><small>前往卡密抽奖页面</small></div><span class="arrow">↗</span>
+        </a>
+        <a class="resource" href="https://7377yyds.github.io/GDYZ" target="_blank" rel="noopener noreferrer">
+          <span class="resource-icon">🤖</span>
+          <div><strong>其他服务器 · 高达服</strong><small>探索高达服务器</small></div><span class="arrow">↗</span>
+        </a>
+        <div class="resource disabled" aria-disabled="true">
+          <span class="resource-icon">🏴‍☠️</span>
+          <div><strong>其他服务器 · 海贼王服</strong><small>尚未开发 · 敬请期待</small></div>
+        </div>
+        <div class="resource disabled" aria-disabled="true">
+          <span class="resource-icon">🔮</span>
+          <div><strong>其他服务器 · 洪荒服</strong><small>尚未开发 · 敬请期待</small></div>
+        </div>
+        <div class="resource disabled" aria-disabled="true">
+          <span class="resource-icon">🌍</span>
+          <div><strong>其他服务器 · 起源服</strong><small>尚未开发 · 敬请期待</small></div>
+        </div>
+      </div>
     </div>
   </section>
 </main>
 
-<footer class="wrap">
-  <strong>7377斗罗大陆 · 你的成神之路，由此开启</strong>
-  <p>玩方舟 先选好服务器玩着才能不烧心</p>
-  <p>
-    本页按服主提供的资料整理，未实时核实服务器状态及外部链接。
-    玩法、奖励和活动如有调整，请以服内与群内公告为准。
-  </p>
+<footer>
+  <strong>7377斗罗大陆</strong>
+  <div>玩方舟 先选好服务器玩着才能不烧心</div>
+  <div>愿每一位魂师，都能找到属于自己的成神之路。</div>
 </footer>
 
-<a class="top" href="#home" aria-label="返回页面顶部">↑ 顶部</a>
-<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<a class="back-top" href="#top" aria-label="返回顶部" title="返回顶部">↑</a>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-"use strict";
+(function () {
+  "use strict";
 
-const toast = document.getElementById("toast");
-let toastTimer;
+  const toast = document.getElementById("toast");
+  let timer;
 
-function showToast(message) {
-  clearTimeout(toastTimer);
-  toast.textContent = message;
-  toastTimer = setTimeout(() => {
-    toast.textContent = "";
-  }, 4000);
-}
-
-async function copyIP(ip, button) {
-  let copied = false;
-
-  if (navigator.clipboard && window.isSecureContext) {
-    try {
-      await navigator.clipboard.writeText(ip);
-      copied = true;
-    } catch (_) {}
+  function notify(message) {
+    clearTimeout(timer);
+    toast.textContent = message;
+    toast.classList.add("show");
+    timer = setTimeout(function () {
+      toast.classList.remove("show");
+    }, 3000);
   }
 
-  if (!copied) {
-    const input = document.createElement("textarea");
-    input.value = ip;
-    input.setAttribute("readonly", "");
-    input.style.position = "fixed";
-    input.style.left = "-9999px";
-    input.style.top = "0";
-    document.body.appendChild(input);
-    input.select();
-    input.setSelectionRange(0, input.value.length);
+  function fallbackCopy(text) {
+    const field = document.createElement("textarea");
+    const previousFocus = document.activeElement;
+    field.value = text;
+    field.readOnly = true;
+    field.style.cssText =
+      "position:fixed;left:-9999px;top:0;opacity:0;font-size:16px";
+    document.body.appendChild(field);
 
+    let copied = false;
     try {
+      field.focus();
+      field.select();
+      field.setSelectionRange(0, text.length);
       copied = document.execCommand("copy");
-    } catch (_) {}
-
-    input.remove();
-    button.focus();
+    } catch (error) {
+      copied = false;
+    } finally {
+      field.remove();
+      if (previousFocus && typeof previousFocus.focus === "function") {
+        previousFocus.focus({ preventScroll: true });
+      }
+    }
+    return copied;
   }
 
-  if (copied) {
-    showToast("已复制 " + ip + "，请添加到 Steam 收藏");
-  } else {
-    showToast("自动复制受限，请手动复制服务器地址");
-    window.prompt("请手动复制服务器 IP：", ip);
-  }
-}
+  document.querySelectorAll("[data-copy]").forEach(function (button) {
+    button.addEventListener("click", async function () {
+      const address = button.dataset.copy;
+      let copied = false;
 
-document.querySelectorAll("[data-ip]").forEach(button => {
-  button.addEventListener("click", () => {
-    copyIP(button.dataset.ip, button);
+      if (window.isSecureContext && navigator.clipboard) {
+        try {
+          await navigator.clipboard.writeText(address);
+          copied = true;
+        } catch (error) {
+          copied = fallbackCopy(address);
+        }
+      } else {
+        copied = fallbackCopy(address);
+      }
+
+      if (copied) {
+        notify("✓ 已复制 IP：" + address);
+      } else {
+        window.prompt("自动复制不可用，请手动复制服务器地址：", address);
+      }
+    });
   });
-});
-
-const motionButton = document.getElementById("motion");
-const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-let userPaused = false;
-
-function updateMotion() {
-  const reduced = reducedMotion.matches;
-  document.body.classList.toggle(
-    "paused",
-    userPaused || reduced || document.hidden
-  );
-  motionButton.disabled = reduced;
-  motionButton.textContent = reduced
-    ? "已跟随系统减少动态"
-    : userPaused ? "恢复动画" : "暂停动画";
-  motionButton.setAttribute("aria-pressed", String(userPaused || reduced));
-}
-
-motionButton.addEventListener("click", () => {
-  userPaused = !userPaused;
-  updateMotion();
-});
-
-document.addEventListener("visibilitychange", updateMotion);
-
-if (reducedMotion.addEventListener) {
-  reducedMotion.addEventListener("change", updateMotion);
-} else if (reducedMotion.addListener) {
-  reducedMotion.addListener(updateMotion);
-}
-
-updateMotion();
+})();
 </script>
 </body>
 </html>
+
