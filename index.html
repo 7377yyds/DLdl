@@ -824,11 +824,14 @@ for (let i = 0; i < 26; i++) {
 // 樱花弹幕仅在首屏流动，避免遮挡教程正文。
 const messages = [
   "🌸 欢迎来到7377斗罗大陆",
-  "🌸 十环觉醒 · 共赴神界",
+  "🌸 武魂觉醒 · 共赴神界",
   "🌸 愿你武魂觉醒，一路成神",
   "🌸 新的冒险，从新手村启程",
   "🌸 与伙伴一起挑战世界BOSS",
   "🌸 玩方舟，先选好服务器"
+  "🌸 玩7377开启你的成神之路"
+  "🌸 就是这个味！"
+  "🌸 好玩爱玩还想玩"
 ];
 messages.forEach((text, index) => {
   const item = document.createElement("span");
@@ -991,9 +994,9 @@ const exclusiveData = [
     ].map(name => [name, standard])
   },
   {
-    tier: "T4", rank: "R", style: "t4",
-    rows: ["京灵", "御风", "叶泠泠", "绛珠", "黄远", "风笑天"]
-      .map(name => [name, standard])
+    tier:"T4", rank:"R", color:"t4",
+      rows:["京灵","御风","叶泠泠","绛珠","黄远","风笑天"]
+        .map(name => [name,normalSkill])
   }
 ];
 
