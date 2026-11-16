@@ -216,9 +216,101 @@ footer{text-align:center;color:var(--muted);font-size:13px;padding:20px}
   *,*:before,*:after{animation:none!important;transition:none!important}
   #petals,#danmaku{display:none}
 }
+/* ===== 全屏视频背景 ===== */
+body{
+  /* 独立层叠上下文，避免负层级背景被页面底色挡住 */
+  isolation:isolate;
+}
+
+/* 保留原来的渐变背景，视频加载期间作为底色 */
+body::before{
+  z-index:-3;
+}
+
+/* 固定覆盖整个窗口，滚动页面时不移动 */
+.video-background{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:-2;
+  overflow:hidden;
+  pointer-events:none;
+}
+
+#backgroundVideo{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  pointer-events:none;
+}
+
+/* 轻微压暗视频，保证文字清晰 */
+.video-background::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    180deg,
+    rgba(10,6,20,.28),
+    rgba(10,6,20,.40)
+  );
+}
+
+/* 关闭原来的全屏旋转魂环，减少与视频同时渲染的负担。
+   教程里的魂环卡片仍然正常显示。 */
+.rings-stage{
+  display:none;
+}
+
+/* 面板适当透明，让视频可以透出来 */
+:root{
+  --panel:rgba(30,20,46,.78);
+}
+
+.side-box{
+  background:rgba(27,18,41,.80);
+}
+
+.top{
+  background:rgba(19,14,34,.86);
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+}
+
+/* 小屏幕稍微提高面板不透明度，方便阅读 */
+@media(max-width:720px){
+  :root{
+    --panel:rgba(30,20,46,.84);
+  }
+}
+
 </style>
 </head>
 <body id="top">
+
+<!-- 全屏视频背景 -->
+<div class="video-background" aria-hidden="true">
+ <video
+  id="backgroundVideo"
+  poster="./background-poster.webp"
+  autoplay
+  muted
+  loop
+  playsinline
+  webkit-playsinline
+  preload="auto"
+  disablepictureinpicture
+  disableremoteplayback
+  tabindex="-1"
+>
+  <source src="./background.mp4" type="video/mp4">
+</video>
+</div>
+
+<!-- 原来的魂环、花瓣和弹幕 -->
 <div class="rings-stage" aria-hidden="true">
   <div class="rings" id="rings"><span class="rune">魂</span></div>
 </div>
@@ -1433,6 +1525,89 @@ updateActive();
 })();
 </script>
 
+<script>
+(function(){
+  "use strict";
+
+  const video = document.getElementById("backgroundVideo");
+  if(!video) return;
+
+  let playPending = false;
+  let failed = false;
+
+  video.muted = true;
+  video.defaultMuted = true;
+  video.playsInline = true;
+
+  function shouldPlay(){
+    return !failed &&
+      !document.hidden &&
+      !document.body.classList.contains("effects-off");
+  }
+
+  function syncVideo(){
+    if(!shouldPlay()){
+      video.pause();
+      return;
+    }
+
+    if(playPending || !video.paused) return;
+
+    playPending = true;
+
+    const attempt = video.play();
+
+    if(attempt && typeof attempt.then === "function"){
+      attempt
+        .then(function(){
+          /* 播放请求完成时，再次确认页面状态 */
+          if(!shouldPlay()) video.pause();
+        })
+        .catch(function(){
+          /* 自动播放被限制时，等待用户点击后重试 */
+        })
+        .finally(function(){
+          playPending = false;
+        });
+    }else{
+      playPending = false;
+    }
+  }
+
+  /* 可播放时立即尝试，不等待整个文件下载完 */
+  video.addEventListener("loadeddata", syncVideo);
+  video.addEventListener("canplay", syncVideo);
+
+  /* 切换标签页时暂停，回来后继续 */
+  document.addEventListener("visibilitychange", syncVideo);
+  window.addEventListener("pageshow", syncVideo);
+
+  /* 部分手机需要用户首次点击或按键后才允许播放 */
+  document.addEventListener("pointerdown", syncVideo, {passive:true});
+  document.addEventListener("keydown", syncVideo);
+
+  /* 与原网页“动效：开 / 关”按钮同步 */
+  const observer = new MutationObserver(syncVideo);
+  observer.observe(document.body, {
+    attributes:true,
+    attributeFilter:["class"]
+  });
+
+  function handleError(){
+    failed = true;
+    video.hidden = true;
+    console.warn(
+      "背景视频加载失败，请检查 background.mp4 路径及视频编码。"
+    );
+  }
+
+  video.addEventListener("error", handleError);
+  const source = video.querySelector("source");
+  if(source) source.addEventListener("error", handleError);
+
+  syncVideo();
+})();
+</script>
+
 </body>
 </html>
-
