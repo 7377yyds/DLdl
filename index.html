@@ -236,7 +236,10 @@ body::before{
   z-index:-2;
   overflow:hidden;
   pointer-events:none;
+  background:
+    url("./background-poster.webp") center / cover no-repeat;
 }
+
 
 #backgroundVideo{
   display:block;
@@ -286,7 +289,15 @@ body::before{
     --panel:rgba(30,20,46,.84);
   }
 }
-
+</style>
+<!-- 7377 斗罗大陆 · 快捷命令 / 专属分阶 / 魂环升级 -->
+<style>
+/* 快捷命令独立复制框 */
+.quick-copy-area{
+  margin-top:12px;
+  padding-top:11px;
+  border-top:1px dashed rgba(255,183,216,.25);
+}
 </style>
 </head>
 <body id="top">
@@ -296,12 +307,11 @@ body::before{
  <video
   id="backgroundVideo"
   poster="./background-poster.webp"
-  autoplay
   muted
   loop
   playsinline
   webkit-playsinline
-  preload="auto"
+  preload="metadata"
   disablepictureinpicture
   disableremoteplayback
   tabindex="-1"
@@ -536,21 +546,12 @@ for (const navID of ["topNav","sideNav"]) {
   });
 }
 
-/* 十重叠套魂环 */
-const ringColors = ["#ffe7a0","#d596ff","#bcb1cf","#ff637b","#fff0a2",
-                    "#72efae","#76bcff","#5ce0dc","#e2a4ff","#ffabc9"];
-ringColors.forEach((color,i) => {
-  const ring = document.createElement("div");
-  ring.className = "soul-ring";
-  ring.style.setProperty("--size",(22+i*8.4)+"%");
-  ring.style.setProperty("--color",color);
-  ring.style.setProperty("--speed",(24+i*5)+"s");
-  if(i%2) ring.style.animationDirection="reverse";
-  $("rings").append(ring);
-});
-
 /* 樱花飘落与横向弹幕 */
-for(let i=0;i<26;i++){
+const petalCount = window.matchMedia("(max-width:720px)").matches
+  ? 8
+  : 16;
+
+for(let i=0;i<petalCount;i++){
   const p=document.createElement("i");
   p.className="petal";
   p.style.left=(Math.random()*100)+"%";
@@ -571,17 +572,43 @@ for(let i=0;i<26;i++){
   $("danmaku").append(el);
 });
 const reduceMotion=window.matchMedia("(prefers-reduced-motion: reduce)");
-let effectsOn=!reduceMotion.matches;
+// 用户开关与系统偏好分别管理。
+// 系统减少动态效果仍由 syncEffects() 强制执行。
+let effectsOn=true;
+
 function syncEffects(){
-  document.body.classList.toggle("effects-off",!effectsOn);
-  $("effectsToggle").textContent=effectsOn?"🌸 动效：开":"🌸 动效：关";
-  $("effectsToggle").setAttribute("aria-pressed",String(effectsOn));
+  const enabled=effectsOn && !reduceMotion.matches;
+  const button=$("effectsToggle");
+
+  document.body.classList.toggle("effects-off",!enabled);
+  button.textContent=enabled?"🌸 动效：开":"🌸 动效：关";
+  button.setAttribute("aria-pressed",String(enabled));
+  button.title=reduceMotion.matches
+    ? "系统已启用减少动态效果"
+    : "";
 }
+
 syncEffects();
+
 $("effectsToggle").addEventListener("click",()=>{
+  if(reduceMotion.matches){
+    toast("系统已启用减少动态效果，请在系统设置中关闭后再开启动效");
+    return;
+  }
+
   effectsOn=!effectsOn;
   syncEffects();
 });
+
+function handleMotionPreferenceChange(){
+  syncEffects();
+}
+
+if(typeof reduceMotion.addEventListener==="function"){
+  reduceMotion.addEventListener("change",handleMotionPreferenceChange);
+}else{
+  reduceMotion.addListener(handleMotionPreferenceChange);
+}
 
 /* 复制功能：兼容 HTTPS 与本地文件常见浏览器 */
 let toastTimer;
@@ -923,17 +950,20 @@ function updateActive(){
 window.addEventListener("scroll",()=>{
   if(!scheduled){scheduled=true;requestAnimationFrame(updateActive);}
 },{passive:true});
-window.addEventListener("resize",updateActive);
-updateActive();
-</script>
-<!-- 7377 斗罗大陆 · 快捷命令 / 专属分阶 / 魂环升级 -->
-<style>
-/* 快捷命令独立复制框 */
-.quick-copy-area{
-  margin-top:12px;
-  padding-top:11px;
-  border-top:1px dashed rgba(255,183,216,.25);
+function syncNavigationOffset(){
+  const height=document.querySelector(".top").getBoundingClientRect().height;
+  document.documentElement.style.setProperty(
+    "--anchor-offset",
+    Math.ceil(height+16)+"px"
+  );
+  updateActive();
 }
+
+window.addEventListener("resize",syncNavigationOffset);
+syncNavigationOffset();
+</script>
+
+<style>
 .quick-copy-label{
   display:block;
   margin-bottom:7px;
@@ -1177,6 +1207,56 @@ updateActive();
   .soul-sigil *{animation:none!important}
 }
 
+/* 保留渐变配色，取消列表文字的持续流光和亮度变化 */
+.grad{
+  animation:none;
+}
+
+/* 主标题保留轻微浮动，停止渐变背景持续移动 */
+.hero h1{
+  animation:titleFloat 5s ease-in-out infinite;
+}
+
+/* 手机端减少滤镜开销 */
+@media(max-width:720px){
+  .hero h1{
+    filter:none;
+  }
+
+  #ringList .soul-sigil{
+    filter:none;
+  }
+
+  #ringList .ring-chip::after{
+    display:none;
+  }
+}
+
+/* 默认暂停魂环内部动画 */
+#ringList .ring-chip .soul-sigil *{
+  animation-play-state:paused;
+}
+
+/* 只有出现在屏幕附近的卡片才播放 */
+#ringList .ring-chip.is-visible .soul-sigil *{
+  animation-play-state:running;
+}
+
+/* 页面进入后台时暂停 CSS 动画 */
+body.page-hidden *,
+body.page-hidden *::before,
+body.page-hidden *::after{
+  animation-play-state:paused!important;
+}
+/* 锚点顶部留白统一由 html 管理 */
+html{
+  scroll-padding-top:var(--anchor-offset,105px);
+}
+
+section,
+.exclusive-tier-heading{
+  scroll-margin-top:0;
+}
 </style>
 
 <script>
@@ -1215,7 +1295,9 @@ updateActive();
     [/^我的鱼竿/, "wdyg"],
     [/^升级鱼竿/, "sjyg"],
     [/^购买鱼饵/, "gmye"],
+    [/^钓鱼天气/, "dytq"],
     [/^钓鱼/, "dy"]
+
   ];
 
   let copyNoticeTimer;
@@ -1364,8 +1446,19 @@ updateActive();
         });
 
         const link=jumps.querySelector('[data-tier="'+item.tier+'"]');
-        link.setAttribute("aria-disabled",String(!matching.length));
-        if(!matching.length) return;
+       const available=matching.length>0;
+
+link.setAttribute("aria-disabled",String(!available));
+
+if(available){
+  link.href="#exclusive-tier-"+item.tier;
+  link.removeAttribute("tabindex");
+}else{
+  link.removeAttribute("href");
+  link.tabIndex=-1;
+}
+
+if(!available) return;
 
         const heading=document.createElement("tr");
         heading.className="exclusive-tier-heading";
@@ -1503,26 +1596,6 @@ updateActive();
       makeSigil(index,card.classList.contains("black-ring")));
   });
 
-  /* 为原来的十重背景魂环补上符文 */
-  document.querySelectorAll(".rings .soul-ring").forEach((ring,index)=>{
-    if(ring.querySelector(".bg-ring-runes")) return;
-
-    const runes=document.createElement("span");
-    runes.className="bg-ring-runes";
-    runes.setAttribute("aria-hidden","true");
-
-    ["✧","◇","✦","◇"].forEach((symbol,i)=>{
-      const rune=document.createElement("b");
-      rune.textContent=symbol;
-      const angle=i*90+index*12;
-      const radians=angle*Math.PI/180;
-      rune.style.left=(50+50*Math.cos(radians))+"%";
-      rune.style.top=(50+50*Math.sin(radians))+"%";
-      rune.style.transform="translate(-50%,-50%) rotate("+angle+"deg)";
-      runes.append(rune);
-    });
-    ring.append(runes);
-  });
 })();
 </script>
 
@@ -1662,5 +1735,43 @@ updateActive();
   syncVideo();
 })();
 </script>
+<script>
+(function(){
+  "use strict";
+
+  const cards = document.querySelectorAll("#ringList .ring-chip");
+
+  if("IntersectionObserver" in window){
+    const observer = new IntersectionObserver(entries => {
+      for(const entry of entries){
+        entry.target.classList.toggle(
+          "is-visible",
+          entry.isIntersecting
+        );
+      }
+    }, {
+      rootMargin:"80px 0px",
+      threshold:0
+    });
+
+    cards.forEach(card => observer.observe(card));
+  }else{
+    // 不支持观察器的浏览器保留原来的动画效果。
+    cards.forEach(card => card.classList.add("is-visible"));
+  }
+
+  function syncPageVisibility(){
+    document.body.classList.toggle(
+      "page-hidden",
+      document.hidden
+    );
+  }
+
+  document.addEventListener("visibilitychange", syncPageVisibility);
+  window.addEventListener("pageshow", syncPageVisibility);
+  syncPageVisibility();
+})();
+</script>
+
 </body>
 </html>
